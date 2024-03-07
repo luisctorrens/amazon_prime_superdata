@@ -1,5 +1,4 @@
 # pip install streamlit pandas matplotlib seaborn
-
 import pandas as pd
 import streamlit as st
 import altair as alt
@@ -52,3 +51,21 @@ with tab_dash:
     df_agrupado_tipo = pd.DataFrame(df.groupby(['tipo']).size())
     df_agrupado_tipo.columns = ['quantidade']
     st.bar_chart(df_agrupado_tipo, use_container_width=True, color=(255, 255, 255, 0.9))
+
+    st.divider()
+
+    # categoria
+    categorias = pd.unique(df['categoria'])
+    lista_categorias = set()
+    for linha in categorias:
+        itens = linha.split(', ')
+        for item in itens:
+            lista_categorias.add(item)
+
+    contagem_categorias = {}
+    for categoria in lista_categorias:
+        contagem_categorias[categoria] = df['categoria'].str.contains(categoria).sum()
+
+    contagem_categorias['Culture'] = contagem_categorias['and Culture']
+    contagem_categorias.pop('Culture')
+    st.write(contagem_categorias)
